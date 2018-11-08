@@ -15,7 +15,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//后台登录
 Route::get('/adminlogin','Admin\AdminController@login');
-Route::get('/admin','Admin\AdminController@index');
+Route::post('/admindologin','Admin\AdminController@dologin');
 
-Route::resource('/adminclassify','Admin\ClassifyController');
+// 中间件'middleware'=>'adminlogin'
+Route::group([],function(){
+	//后台首页路由
+	Route::get('/admin','Admin\AdminController@index');
+	//管理员管理
+	Route::resource('/adminusers','Admin\AdminuserController');
+	//分类路由
+	Route::resource('/adminclassify','Admin\ClassifyController');
+
+});

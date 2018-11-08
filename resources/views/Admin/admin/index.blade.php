@@ -42,7 +42,7 @@
       
       <section id="main-content"> 
        <section class="wrapper"> 
-        <h3><i class="fa fa-angle-right"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 分类管理</font></font></h3> 
+        <h3><i class="fa fa-angle-right"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 管理员管理</font></font></h3> 
         
         <!-- row --> 
         <div class="row mt"> 
@@ -51,14 +51,21 @@
           &nbsp;&nbsp;&nbsp; 
             <div class="btn-group">
               <div class="btn-group">
-                <a href="/adminclassify" class="btn btn-warning active"><span class="fa fa-tasks"></span>&nbsp;&nbsp;<font style="vertical-align: inherit;">分类列表</font></a>
+                <a href="/adminusers" class="btn btn-warning active"><span class="fa fa-tasks"></span>&nbsp;&nbsp;<font style="vertical-align: inherit;">管理员列表</font></a>
               </div>
               <div class="btn-group">
-                <a href="/adminclassify/create" class="btn btn-warning"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;<font style="vertical-align: inherit;">添加分类</font></a>
-              </div>
-              <!-- <div class="btn-group">
-                <button type="button" class="btn btn-theme"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">对</font></font></button>
-              </div> -->
+                <a href="/adminusers/create" class="btn btn-warning"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;<font style="vertical-align: inherit;">添加管理员</font></a>
+              </div>              
+            </div>
+            <div class="col-md-offset-9">
+            <form class="form-inline" action="/adminusers" method="get">
+                <div class="input-group">           
+                  <input type="text" class="form-control" name="keywords" value="{{$request['keywords'] or ''}}" id="exampleInputName2" placeholder="请输入关键字">
+                  <span class="input-group-btn">
+                    <button type="submit" class="btn btn-warning"><span class="glyphicon glyphicon-search"></span></button>
+                 </span>
+                </div>
+              </form>
             </div>
            <!-- <a href="/adminclassify/create" class="btn btn-theme"><i class="fa fa-cog"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 添加分类</font></font></a> -->
            <hr />
@@ -66,22 +73,41 @@
             <thead> 
              <tr> 
               <th><i class="fa fa-bullhorn"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> id</font></font></th> 
-              <th class="hidden-phone"><i class="fa fa-question-circle"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 分类名</font></font></th> 
-              <th><i class="fa fa-bookmark"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 父id</font></font></th> 
-              <th><i class="fa fa-bookmark"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 路径</font></font></th>
+              <th class="hidden-phone"><i class="fa fa-question-circle"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 管理员名</font></font></th> 
+              <!-- <th><i class="fa fa-bookmark"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 父id</font></font></th>  -->
+              <!-- <th><i class="fa fa-bookmark"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 路径</font></font></th>
               <th><i class=" fa fa-edit"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 状态</font></font></th> 
-              <th></th> 
+              <th></th>  -->
              </tr> 
             </thead> 
             <tbody> 
-              @foreach($cate as $key=>$value)
+              @foreach($users as $key=>$value)
              <tr> 
-              <td><a href="basic_table.html#"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$value->id}}</font></font></a></td> 
+              <td><a href="basic_table.html#"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$key}}</font></font></a></td> 
               <td class="hidden-phone"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$value->name}}</font></font></td> 
-              <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$value->pid}}</font></font></td> 
-              <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$value->path}}</font></font></td> 
-              <td><span class="label label-success label-mini"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">上架</font></font></span></td> 
-              <td> <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button> <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button> </td> 
+              
+              <td> 
+                <table>
+                  <tr>
+                    <td><a href="#" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-lock"></span></a></td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td>
+                      <a href="/adminusers/{{$value->id}}/edit" class="btn btn-primary btn-xs">
+                        <i class="fa fa-pencil"></i>
+                      </a> 
+                    </td>
+                    <td>
+                      <form action="/adminusers/{{$value->id}}" method="post">
+                      {{method_field('DELETE')}}
+                      {{csrf_field()}}
+                        <button type="submit" class="btn btn-danger btn-xs">
+                          <i class="fa fa-trash-o"></i>
+                        </button>                  
+                      </form>
+                    </td>
+                  </tr>
+                </table>           
+              </td> 
              </tr>    
              @endforeach
              
@@ -89,7 +115,7 @@
             </tbody> 
            </table> 
            
-              {{$cate->render()}}
+              {{$users->render()}}
           
            
           </div>
@@ -116,74 +142,32 @@
     <script src="/static/admin/js/jquery.scrollTo.min.js"></script>
     <script src="/static/admin/js/jquery.nicescroll.js" type="text/javascript"></script>
     <script src="/static/admin/js/jquery.sparkline.js"></script>
-
+    <script src="/static/admin/js/bootstrap-switch.js"></script>
+    <script src="/static/admin/js/jquery-ui-1.9.2.custom.min.js"></script>
 
     <!--common script for all pages-->
     <script src="/static/admin/js/common-scripts.js"></script>
-    
     <script type="text/javascript" src="/static/admin/js/gritter/js/jquery.gritter.js"></script>
     <script type="text/javascript" src="/static/admin/js/gritter-conf.js"></script>
 
-    <!--script for this page-->
-    <script src="/static/admin/js/sparkline-chart.js"></script>    
-	<script src="/static/admin/js/zabuto_calendar.js"></script>	
-	
-	<script type="text/javascript">
-        $(document).ready(function () {
-        var unique_id = $.gritter.add({
-            // (string | mandatory) the heading of the notification
-            title: '欢迎登录ETRO STORES后台管理系统！',
-            // (string | mandatory) the text inside the notification
-            text: 'Hover me to enable the Close Button. You can hide the left sidebar clicking on the button next to the logo. Free version for <a href="" target="_blank" style="color:#ffd777">BlackTie.co</a>.',
-            // (string | optional) the image to display on the left
-            image: '/static/admin/img/ui-sam.jpg',
-            // (bool | optional) if you want it to fade out on its own or just sit there
-            sticky: true,
-            // (int | optional) the time you want it to be alive for before fading out
-            time: '',
-            // (string | optional) the class name you want to apply to that specific message
-            class_name: 'my-sticky-class'
-        });
-
-        return false;
-        });
-	</script>
-	
-	<script type="application/javascript">
+  </script>
+  <script type="application/javascript">
         $(document).ready(function () {
             $("#date-popover").popover({html: true, trigger: "manual"});
             $("#date-popover").hide();
             $("#date-popover").click(function (e) {
                 $(this).hide();
-            });
-        
-            $("#my-calendar").zabuto_calendar({
-                action: function () {
-                    return myDateFunction(this.id, false);
-                },
-                action_nav: function () {
-                    return myNavFunction(this.id);
-                },
-                ajax: {
-                    url: "show_data.php?action=1",
-                    modal: true
-                },
-                legend: [
-                    {type: "text", label: "Special event", badge: "00"},
-                    {type: "block", label: "Regular event", }
-                ]
-            });
+            });     
+            
         });
         
         
-        function myNavFunction(id) {
-            $("#date-popover").hide();
-            var nav = $("#" + id).data("navigation");
-            var to = $("#" + id).data("to");
-            console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
-        }
+        // function myNavFunction(id) {
+        //     $("#date-popover").hide();
+        //     var nav = $("#" + id).data("navigation");
+        //     var to = $("#" + id).data("to");
+        //     console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+        // }
     </script>
-  
-
   </body>
 </html>

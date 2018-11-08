@@ -48,23 +48,32 @@
         <div class="row mt"> 
          <div class="col-md-12"> 
           <div class="content-panel"> 
-           <h4><i class="fa fa-angle-right"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 添加分类</font></font></h4> 
+           <h4><i class="fa fa-angle-right"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 修改分类信息</font></font></h4> 
            <hr />
-           <form class="form-horizontal style-form" method="get">
+           <form class="form-horizontal style-form" action="/adminclassify/{{$data->id}}" method="post">
+                {{csrf_field()}}
+                {{method_field('PUT')}}
                 <div class="form-group">
                     <label class="col-sm-1 col-sm-1 col-sm-offset-1 control-label"><font style="vertical-align: inherit;">分类名：</font></label>
                     <div class="col-sm-6">
-                    <input type="text" class="form-control">
+                    <input type="text" name="name" class="form-control" value="{{$data->name}}">
                     </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-1 col-sm-1 col-sm-offset-1 control-label"><font style="vertical-align: inherit;">父类：</font></label>
                   <div class="col-sm-6">
                     <select class="form-control" name="pid">
-                      <option value=""><font style="vertical-align: inherit;">==请选择父类==</font></option>
+                      <!-- <option value="{{$data->id}}" selected><font style="vertical-align: inherit;">{{$data->name}}</font></option> -->
+                      <!-- 顶级分类，pid=0 -->
+                      <option value="0"><font style="vertical-align: inherit;">◆◆|顶级分类</font></option>                      
+                      <!-- 子分类，pid= -->
                       @foreach($cate as $value)
-                       <option value="{{$value->pid}}"><font style="vertical-align: inherit;">{{$value->name}}</font></option>
+                       <option value="{{$value->id}}"><font style="vertical-align: inherit;">{{$value->name}}</font></option>                                 
                       @endforeach 
+                      <script>
+                        alert(length($('option'));
+                          // for(var i = 0;i<length($('option')))
+                      </script>
                     </select>  
                   </div>         
                 </div> 
@@ -110,29 +119,7 @@
     <script type="text/javascript" src="/static/admin/js/gritter-conf.js"></script>
 
     <!--script for this page-->
-    <script src="/static/admin/js/sparkline-chart.js"></script>    
-	<script src="/static/admin/js/zabuto_calendar.js"></script>	
-	
-	<script type="text/javascript">
-        $(document).ready(function () {
-        var unique_id = $.gritter.add({
-            // (string | mandatory) the heading of the notification
-            title: '欢迎登录ETRO STORES后台管理系统！',
-            // (string | mandatory) the text inside the notification
-            text: 'Hover me to enable the Close Button. You can hide the left sidebar clicking on the button next to the logo. Free version for <a href="" target="_blank" style="color:#ffd777">BlackTie.co</a>.',
-            // (string | optional) the image to display on the left
-            image: '/static/admin/img/ui-sam.jpg',
-            // (bool | optional) if you want it to fade out on its own or just sit there
-            sticky: true,
-            // (int | optional) the time you want it to be alive for before fading out
-            time: '',
-            // (string | optional) the class name you want to apply to that specific message
-            class_name: 'my-sticky-class'
-        });
-
-        return false;
-        });
-	</script>
+    
 	
 	<script type="application/javascript">
         $(document).ready(function () {

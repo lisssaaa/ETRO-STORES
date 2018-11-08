@@ -200,22 +200,17 @@
               	  <h5 class="centered">Lisa</h5>
               	  	
                   <li class="mt">
-                      <a class="active" href="/admin">
-                          <i class="fa fa-"></i>
+                      <a href="/admin">
+                          <i class="fa fa-desktop"></i>
                           <span>首页</span>
                       </a>
                   </li>
 
                   <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-desktop"></i>
-                          <span>管理员管理</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="general.html">基础样式</a></li>
-                          <li><a  href="buttons.html">按钮</a></li>
-                          <li><a  href="panels.html">面板</a></li>
-                      </ul>
+                      <a href="/adminusers" >
+                          <span class="glyphicon glyphicon-user"></span>
+                          <span>&nbsp;&nbsp;&nbsp;管理员管理</span>
+                      </a>                      
                   </li>
 
                   <li class="sub-menu">
@@ -235,7 +230,7 @@
                           <span>页面</span> 
                       </a>                     
                       <ul class="sub">
-                          <li class="active"><a  href="blank.html">空白模板</a></li>
+                          <li><a  href="blank.html">空白模板</a></li>
                           <li><a  href="login.html">登录</a></li>
                           <li><a  href="lock_screen.html">锁屏</a></li>
                       </ul>
@@ -295,17 +290,17 @@
       @show
       <!--main content end-->
       <!--footer start-->
-      <footer class="site-footer">
+      <!-- <footer class="site-footer">
           <div class="text-center">
               Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a>
               <a href="blank.html#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
           </div>
-      </footer>
+      </footer> -->
       <!--footer end-->
   </section>
-
+  
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="/static/admin/js/jquery.js"></script>
     <script src="/static/admin/js/bootstrap.min.js"></script>
@@ -320,7 +315,9 @@
     <script src="/static/admin/js/common-scripts.js"></script>
 
     <!--script for this page-->
-    
+    <script type="text/javascript" src="/static/admin/js/gritter/js/jquery.gritter.js"></script>
+    <script type="text/javascript" src="/static/admin/js/gritter-conf.js"></script>
+   
   <script>
       //custom select box
 
@@ -329,6 +326,60 @@
       });
 
   </script>
-
+  <!-- 提醒信息 -->
+  @if(session('success'))
+  <div id="gritter-notice-wrapper">
+   <div id="gritter-item-1" class="gritter-item-wrapper my-sticky-class" style="">
+    <div class="gritter-top"></div>
+    <div class="gritter-item">    
+      <span class="gritter-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><span class="glyphicon glyphicon-thumbs-up"></span></font></font></span>
+      <p style="color:#ffd777"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{session('success')}}</font></font></p>
+     
+     <div style="clear:both"></div>
+    </div>
+    <div class="gritter-bottom"></div>
+   </div>
+  </div>
+  @endif
+  @if(session('error'))
+  <div id="gritter-notice-wrapper">
+   <div id="gritter-item-1" class="gritter-item-wrapper my-sticky-class" style="">
+    <div class="gritter-top"></div>
+    <div class="gritter-item">    
+      <span class="gritter-title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><span class="glyphicon glyphicon-thumbs-down"></font></font></span>
+      <p style="color:#ffd777"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{session('error')}}</font></font></p>
+     
+     <div style="clear:both"></div>
+    </div>
+    <div class="gritter-bottom"></div>
+   </div>
+  </div>
+  @endif
+  <!-- 表单校验提醒信息 -->
+  @if(count($errors)>0)
+  <div id="gritter-notice-wrapper">
+   <div id="gritter-item-1" class="gritter-item-wrapper my-sticky-class" style="">
+    <div class="gritter-top"></div>
+    <div class="gritter-item">    
+      <span class="gritter-title"><span class="glyphicon glyphicon-warning-sign"></span></span>
+      
+        @foreach($errors->all() as $error)
+        
+          <p style="color:#ffd777"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$error}}</font></font></p>
+        
+        @endforeach
+           
+     <div style="clear:both"></div>
+    </div>
+    <div class="gritter-bottom"></div>
+   </div>
+  </div>
+  @endif
+  <script>
+      $('#gritter-notice-wrapper').fadeIn();
+      setTimeout(function(){
+        $("#gritter-notice-wrapper").fadeOut();
+      },4000);
+  </script>
   </body>
 </html>

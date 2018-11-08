@@ -10,22 +10,19 @@ class ClassifyController extends Controller
 {
     /**
      *
-     获取分类
+     获取所有排序后分类的函数
      *
      */
-    public function getcates(){
-        $cate=DB::table("type")->select(DB::raw('*,concat(path,",",id) as paths'))->orderBy('paths')->get();
-        //遍历
-        foreach($cate as $key=>$value){
-        // echo $value->path."<br>";
-        //转换为数组
-        $arr=explode(",",$value->path);
-        // echo "<pre>";
-        // var_dump($arr);
-        //获取逗号个数
-        $len=count($arr)-1;
-        //字符串重复函数
-        $cate[$key]->name=str_repeat("--|",$len).$value->name;
+    public function getcates($cate){        
+        //遍历，根据path字段的逗号个数区分分类的级别，并拼接上对应个数的◆◆|
+        foreach($cate as $key=>$value){        
+            //转换为数组
+            $arr=explode(",",$value->path);
+            
+            //获取逗号个数
+            $len=count($arr)-2;
+            //字符串重复函数
+            $cate[$key]->name=str_repeat("◆◆|",$len).$value->name;
         } 
         return $cate;
     }
@@ -34,15 +31,19 @@ class ClassifyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-//         $data=DB::select("select *,concat(path,'',id) as paths from type order by
-// paths");
-//         dd($data);
-        $cate=DB::table("type")->select(DB::raw('*,concat(path,"",id) as paths'))->orderBy('paths')->paginate(6);
+        //获取搜索关键字
+        $k = $request->input('keywords');
+        //拼接path和id起名为paths，并以paths排序，得到父类1，1的子类，父类2，2的子类。。。排序效果
+        // $data=DB::select("select *,concat(path,'',id) as paths from type order by paths");
+        // dd($data);
+        //连贯操作
+        $data=DB::table("type")->select(DB::raw('*,concat(path,"",id) as paths'))->where('name','like','%'.$k.'%')->orderBy('paths')->paginate(6);
+        $cate = $this->getcates($data);  
         // dd($cate);
-        return view('Admin.classify',['cate'=>$cate]);
+        //加载模板并传参
+        return view('Admin.classify.index',['cate'=>$cate,'request'=>$request->all()]);
     }
 
     /**
@@ -52,10 +53,10 @@ class ClassifyController extends Controller
      */
     public function create()
     {
-        //
-        $cate = $this->getcates();
-        // dd($cate);
-        return view('Admin.classifyadd',['cate'=>$cate]);
+        //通过自定义函数获取所有分类数据
+        $data=DB::table("type")->select(DB::raw('*,concat(path,"",id) as paths'))->orderBy('paths')->get();
+        $cate = $this->getcates($data);        
+        return view('Admin.classify.add',['cate'=>$cate]);
     }
 
     /**
@@ -66,7 +67,27 @@ class ClassifyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //获取请求数据name pid
+        // dd($request->all());
+        $pid = $request->input('pid');
+        $data = $request->only(['name','pid']);
+        $data['display'] = 0;
+        //若添加顶级分类，即pid=0
+        if($pid == 0){            
+            //path字段： 0,
+            $data['path'] = $pid.',';                    
+        }else{
+            //添加子分类
+            //获取父类id,拼接path
+            $info = DB::table('type')->where('id','=',$pid)->first();            
+            $data['path'] = $info->path.$info->id.',';          
+        }
+         //添加数据库
+        if(DB::table('type')->insert($data)){
+            return redirect('/adminclassify')->with('success','添加成功');
+        }else{
+            return redirect('/adminclassify/create')->with('error','添加失败');
+        }
     }
 
     /**
@@ -88,7 +109,12 @@ class ClassifyController extends Controller
      */
     public function edit($id)
     {
-        //
+        $info=DB::table("type")->select(DB::raw('*,concat(path,"",id) as paths'))->orderBy('paths')->get();
+        $cate = $this->getcates($info); 
+        $data = DB::table('type')->where('id','=',$id)->first();
+        // dd($cate);
+        //加载编辑模板
+        return view('Admin.classify.edit',['cate'=>$cate,'data'=>$data]);
     }
 
     /**
@@ -100,7 +126,26 @@ class ClassifyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //获取请求数据name pid
+        // dd($request->all());
+        $pid = $request->input('pid');
+        $data = $request->only(['name','pid']);
+        //若修改为顶级分类，即pid=0
+        if($pid == 0){            
+            //path字段： 0,
+            $data['path'] = $pid.',';                    
+        }else{
+            //添加子分类
+            //获取父类id,拼接path
+            $info = DB::table('type')->where('id','=',$pid)->first();            
+            $data['path'] = $info->path.$info->id.',';          
+        }
+         //添加数据库
+        if(DB::table('type')->where('id','=',$id)->update($data)){
+            return redirect('/adminclassify')->with('success','修改成功');
+        }else{
+            return redirect('/adminclassify/{$id}/edit')->with('error','修改失败');
+        }
     }
 
     /**
@@ -111,6 +156,16 @@ class ClassifyController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+        // echo $id;
+        //获取当前类别下子类个数
+        $num = DB::table('type')->where('pid','=',$id)->count();
+        if($num > 0){
+            return redirect('/adminclassify')->with('error','当前类别下包含子类，请先删除子类');
+        }
+        //执行删除
+        if(DB::table('type')->where('id','=',$id)->delete()){
+            return redirect('/adminclassify')->with('success','删除成功');
+        }
+
+    }    
 }
