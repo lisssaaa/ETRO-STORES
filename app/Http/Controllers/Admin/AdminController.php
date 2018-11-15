@@ -36,11 +36,21 @@ class AdminController extends Controller
                 foreach($list as $key=>$value){
                     //将当前用户的所有权限存储于$nodelist
                     $nodelist[$value->mname][] = $value->aname;
+                    //如果存在create和edit方法
+                    if($value->aname == 'create')
+                        $nodelist[$value->mname][] = 'store';
+                    if($value->aname == 'edit')
+                        $nodelist[$value->mname][] = 'update';
+                    // 如果存在role和auth方法
+                    if($value->aname == 'role')
+                        $nodelist[$value->mname][] = 'saverole';
+                    if($value->aname == 'auth')
+                        $nodelist[$value->mname][] = 'saveauth';
                 } 
-
+                // dd($nodelist);
     			//将用户信息和用户权限存储于session
     			session(['admin'=>$info->name,'nodelist'=>$nodelist]);
-    			return redirect('/admin')->with('msg','登录成功');
+    			return redirect('/admin')->with('login','欢迎登录ETRO STORES后台管理系统！');
     		}else{
     			return back()->with('error','密码有误');
     		}
@@ -49,5 +59,23 @@ class AdminController extends Controller
     		return back()->with('error','用户名有误');
     	}
     	// dd($data);
+    }
+    public function loginout(Request $request){
+        // var_dump(session()->all());
+        //从session中删除admin和nodelist
+        $request->session()->pull('admin');
+        $request->session()->pull('nodelist');
+        return redirect('/adminlogin');
+    }
+    //修改各表格中状态 传入参数：操作的数据表、数据id
+    public function status(Request $request){
+        $status = $request->input('status');
+        $id = $request->input('id');
+        $table = $request->input('table');
+        if(DB::table($table)->where('id','=',$id)->update(['status'=>$status])){
+            echo '修改状态成功';  
+        }else{
+            echo '修改状态失败';
+        }
     }
 }

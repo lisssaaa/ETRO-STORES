@@ -44,16 +44,16 @@
 		            @if(session('error'))
 		            <label style="color:red">{{session('error')}}</label>
 		            @endif
-		            <label class="checkbox">
-		                <span class="pull-right">
-		                    <a data-toggle="modal" href="login.html#myModal"> 忘记密码?</a>
-		
-		                </span>
-		            </label>
-		            <button class="btn btn-theme btn-block" href="index.html" type="submit"><i class="fa fa-lock"></i> 登录</button>
 		            <hr>
+		            <!-- <label class="checkbox">
+		                <span class="pull-right">
+		                    <a data-toggle="modal" href="login.html#myModal"> 忘记密码?</a>		
+		                </span>
+		            </label> -->
+		            <button class="btn btn-theme btn-block" href="index.html" type="submit"><i class="fa fa-lock"></i> 登录</button>
 		            
-		            <div class="login-social-link centered">
+		            
+		            <!-- <div class="login-social-link centered">
 		            <p>使用第三方账号登录</p>
 		                <button class="btn btn-facebook" type="submit"><i class="fa fa-facebook"></i> Facebook</button>
 		                <button class="btn btn-twitter" type="submit"><i class="fa fa-twitter"></i> Twitter</button>
@@ -63,7 +63,7 @@
 		                <a class="" href="#">
 		                    立即注册
 		                </a>
-		            </div>
+		            </div> -->
 		
 		        </div>
 		

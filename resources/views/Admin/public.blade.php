@@ -37,12 +37,12 @@
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
             <!--logo start-->
-            <a href="index.html" class="logo"><b>ETRO STORES</b></a>
+            <a href="/admin" class="logo"><b>ETRO STORES</b></a>
             <!--logo end-->
-            <div class="nav notify-row" id="top_menu">
-                <!--  notification start -->
+            <!-- <div class="nav notify-row" id="top_menu">
+               
                 <ul class="nav top-menu">
-                    <!-- settings start -->
+                   
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                             <i class="fa fa-tasks"></i>
@@ -66,52 +66,9 @@
                                     </div>
                                 </a>
                             </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Database Update</div>
-                                        <div class="percent">60%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                            <span class="sr-only">60% Complete (warning)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Product Development</div>
-                                        <div class="percent">80%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                                            <span class="sr-only">80% Complete</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Payments Sent</div>
-                                        <div class="percent">70%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
-                                            <span class="sr-only">70% Complete (Important)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="external">
-                                <a href="#">See All Tasks</a>
-                            </li>
                         </ul>
                     </li>
-                    <!-- settings end -->
-                    <!-- inbox dropdown start-->
+                    
                     <li id="header_inbox_bar" class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                             <i class="fa fa-envelope-o"></i>
@@ -175,29 +132,28 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- inbox dropdown end -->
+                   
                 </ul>
-                <!--  notification end -->
-            </div>
+                
+            </ div>-->
             <div class="top-menu">
             	<ul class="nav pull-right top-menu">
-                    <li><a class="logout" href="login.html">注销</a></li>
+                    <li><a class="logout" href="/adminloginout">注销</a></li>
             	</ul>
             </div>
         </header>
       <!--header end-->
       
-      <!-- **********************************************************************************************************************************************************
-      MAIN SIDEBAR MENU
-      *********************************************************************************************************************************************************** -->
-      <!--sidebar start-->
+      <!-- ******************************************************************************************
+     
+      ******************************************************************************************-->
       <aside>
           <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
               	  <p class="centered"><a href="profile.html"><img src="/static/admin/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
-              	  <h5 class="centered">Lisa</h5>
+              	  <h5 class="centered">{{session('admin')}}</h5>
               	  	
                   <li class="mt">
                       <a href="/admin">
@@ -212,18 +168,30 @@
                           <span>&nbsp;&nbsp;&nbsp;管理员管理</span>
                       </a>                      
                   </li>
-
+                  <li class="sub-menu">
+                      <a href="/adminroles" >
+                          <span class="glyphicon glyphicon-bookmark"></span>
+                          <span>&nbsp;&nbsp;&nbsp;角色管理</span>
+                      </a>                      
+                  </li>
+                  <li class="sub-menu">
+                      <a href="/adminauths" >
+                          <span class="glyphicon glyphicon-lock"></span>
+                          <span>&nbsp;&nbsp;&nbsp;权限管理</span>
+                      </a>                      
+                  </li>
+                  <li class="sub-menu">
+                      <a href="/adminuser" >
+                          <i class="fa fa-th"></i>
+                          <span>会员管理</span>
+                      </a>                      
+                  </li>
                   <li class="sub-menu">
                       <a href="/adminclassify" >
                           <i class="fa fa-cogs"></i>
                           <span>分类管理</span>
-                      </a>
-                      <!-- <ul class="sub">
-                          <li><a  href="/adminclassify">分类列表</a></li>
-                          <li><a  href="gallery.html">画册</a></li>
-                          <li><a  href="todo_list.html">事务清单</a></li>
-                      </ul> -->
-                  </li>
+                      </a>                     
+                  </li>                  
                   <li class="sub-menu"> 
                       <a href="javascript:;" >                     
                           <i class="fa fa-book"></i>
@@ -244,16 +212,7 @@
                           <li><a  href="form_component.html">表单组件</a></li>
                       </ul>
                   </li>
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-th"></i>
-                          <span>表格</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="basic_table.html">基础表格</a></li>
-                          <li><a  href="responsive_table.html">响应表格</a></li>
-                      </ul>
-                  </li>
+                  
                   <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class=" fa fa-bar-chart-o"></i>
@@ -269,36 +228,10 @@
               <!-- sidebar menu end-->
           </div>
       </aside>
-      <!--sidebar end-->
       
-      <!-- **********************************************************************************************************************************************************
-      MAIN CONTENT
-      *********************************************************************************************************************************************************** -->
-      <!--main content start-->
-      <!-- <section id="main-content">
-          <section class="wrapper site-min-height">
-            <h3><i class="fa fa-angle-right"></i> 标题</h3>
-            <div class="row mt">
-              <div class="col-lg-12">
-              <p>欢迎登录ETRO STORES后台管理首页.</p>
-              </div>
-            </div>
-      
-          </section>
-      </section> -->
       @section('content')
       @show
-      <!--main content end-->
-      <!--footer start-->
-      <!-- <footer class="site-footer">
-          <div class="text-center">
-              Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a>
-              <a href="blank.html#" class="go-top">
-                  <i class="fa fa-angle-up"></i>
-              </a>
-          </div>
-      </footer> -->
-      <!--footer end-->
+      
   </section>
   
     <!-- js placed at the end of the document so the pages load faster -->
@@ -326,6 +259,24 @@
       });
 
   </script>
+  <!-- 登录信息 -->
+  @if(session('login'))
+  <div id="gritter-notice-wrapper">
+   <div id="gritter-item-1" class="gritter-item-wrapper my-sticky-class" style="">
+    <div class="gritter-top"></div>
+    <div class="gritter-item">
+       <div class="gritter-close" style="display: none;"></div>
+       <img src="/static/admin/img/ui-sam.jpg" class="gritter-image" />
+       <div class="gritter-with-image">
+        <span class="gritter-title">欢迎登录ETRO STORES后台管理系统！</span>
+        <p>在这里，您可以管理数据库信息，若没有权限，请联系<a href="" target="_blank" style="color:#ffd777">超级管理员</a>.</p>
+       </div>
+   <div style="clear:both"></div>
+  </div>
+    <div class="gritter-bottom"></div>
+   </div>
+  </div>
+  @endif
   <!-- 提醒信息 -->
   @if(session('success'))
   <div id="gritter-notice-wrapper">

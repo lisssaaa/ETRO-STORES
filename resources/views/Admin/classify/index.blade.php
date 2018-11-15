@@ -56,22 +56,64 @@
               <div class="btn-group">
                 <a href="/adminclassify/create" class="btn btn-warning"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;<font style="vertical-align: inherit;">添加分类</font></a>
               </div>              
+            </div>           
+            
+              
+              <div class="col-md-offset-9">
+              <form class="form-inline" action="/adminclassify" method="get">
+                  <div class="input-group">           
+                    <input type="text" class="form-control" name="keywords" value="{{$request['keywords'] or ''}}" id="exampleInputName2" placeholder="请输入关键字">
+                    <span class="input-group-btn">
+                      <button type="submit" class="btn btn-warning"><span class="glyphicon glyphicon-search"></span></button>
+                   </span>
+                  </div>
+                </form>
+              </div>
+                       
+          <hr/>         
+           
+            <div class="btn-group btn-group-xs">                               
+                <button class="btn btn-group btn-default all">全选</button> 
+                <button class="btn btn-group btn-default turn">反选</button>  
+                <button class="btn btn-default del">批量删除</button>
             </div>
-            <div class="col-md-offset-9">
-            <form class="form-inline" action="/adminclassify" method="get">
-                <div class="input-group">           
-                  <input type="text" class="form-control" name="keywords" value="{{$request['keywords'] or ''}}" id="exampleInputName2" placeholder="请输入关键字">
-                  <span class="input-group-btn">
-                    <button type="submit" class="btn btn-warning"><span class="glyphicon glyphicon-search"></span></button>
-                 </span>
-                </div>
-              </form>
-            </div>
-           <!-- <a href="/adminclassify/create" class="btn btn-theme"><i class="fa fa-cog"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 添加分类</font></font></a> -->
-           <hr />
+            <!-- 全选反选、批量删除  -->
+            <script>
+                bool=true;                
+                $('.all').click(function(){
+                  //选择表单中的checkbox类型，设置所有的checked=true全选
+                  $(':checkbox').prop('checked',bool);
+                  bool=!bool;
+                }).next().click(function(){
+                  //选择表单中checkbox类型，遍历集合中的每一个元素，将checked设置为与自身相反的值
+                  $(':checkbox').each(function(){
+                    $(this).prop('checked',!$(this).prop('checked'));
+                  });
+                }).next().click(function(){                  
+                  if(!$(':checked').length){
+                      alert('必须至少选择一条数据');
+                  }else{
+                    ids = [];
+                    //获取所有选中的复选框并遍历
+                    $(':checked').each(function(){
+                        //将id存入数组
+                        ids.push($(this).val());
+                        $(this).parents('tr').remove();
+                    });
+                    if(confirm('您确定要删除吗？')){                    
+                        $.get('/classifydel',{ids:ids},function(data){
+                           alert(data);
+                      });                                       
+                    }
+                  }              
+                });
+
+
+            </script>
            <table class="table table-striped table-advance table-hover"> 
             <thead> 
              <tr> 
+              <th>#</th>
               <th><i class="fa fa-bullhorn"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> id</font></font></th> 
               <th class="hidden-phone"><i class="fa fa-question-circle"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 分类名</font></font></th> 
               <th><i class="fa fa-bookmark"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 父id</font></font></th> 
@@ -83,21 +125,12 @@
             <tbody> 
               @foreach($cate as $key=>$value)
              <tr> 
+              <td><input type="checkbox" value="{{$value->id}}"></td>
               <td><a href="basic_table.html#"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$key+1}}</font></font></a></td> 
               <td class="hidden-phone"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$value->name}}</font></font></td> 
               <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$value->pid}}</font></font></td> 
               <td><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$value->path}}</font></font></td>
-              <!-- <td>
-                <div class="switch switch-square has-switch" data-on-label="&lt;i class=' fa fa-check'&gt;&lt;/i&gt;" data-off-label="&lt;i class='fa fa-times'&gt;&lt;/i&gt;"> 
-                   <div class="switch-on switch-animate">
-                    <input type="checkbox" />
-                    <span class="switch-left"><i class=" fa fa-check"></i></span>
-                    <label>&nbsp;</label>
-                    <span class="switch-right"><i class="fa fa-times"></i></span>
-                   </div> 
-                </div> 
-              </td> -->
-              <td><span class="label label-success label-mini"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">上架</font></font></span></td> 
+              
               <td> 
                 <table border="0px">
                   <tr>
@@ -115,21 +148,15 @@
                       </form>
                     </td>
                   </tr>
-                </table>
-                <!-- <a class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>  -->
-                
-                
+                </table> 
               </td> 
              </tr>    
              @endforeach
              
-             
-            </tbody> 
-           </table> 
-           
+            </tbody>             
+           </table>           
               {{$cate->appends($request)->render()}}
-          
-           
+            
           </div>
           <!-- /content-panel --> 
          </div>

@@ -2,6 +2,9 @@
 
 .task-content {
     margin-bottom: 30px;
+    width:400px;
+    height:400px;
+    overflow:auto;
 }
 
 .task-panel {

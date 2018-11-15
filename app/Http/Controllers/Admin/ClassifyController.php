@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 //导入DB
 use DB;
+use App\Http\Requests\AdminClassify;
 class ClassifyController extends Controller
 {
     /**
@@ -39,7 +40,7 @@ class ClassifyController extends Controller
         // $data=DB::select("select *,concat(path,'',id) as paths from type order by paths");
         // dd($data);
         //连贯操作
-        $data=DB::table("type")->select(DB::raw('*,concat(path,"",id) as paths'))->where('name','like','%'.$k.'%')->orderBy('paths')->paginate(6);
+        $data=DB::table("type")->select(DB::raw('*,concat(path,"",id) as paths'))->where('name','like','%'.$k.'%')->orderBy('paths')->paginate(5);
         $cate = $this->getcates($data);  
         // dd($cate);
         //加载模板并传参
@@ -65,7 +66,7 @@ class ClassifyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AdminClassify $request)
     {
         //获取请求数据name pid
         // dd($request->all());
@@ -84,9 +85,9 @@ class ClassifyController extends Controller
         }
          //添加数据库
         if(DB::table('type')->insert($data)){
-            return redirect('/adminclassify')->with('success','添加成功');
+            return redirect('/adminclassify')->with('success','分类添加成功');
         }else{
-            return redirect('/adminclassify/create')->with('error','添加失败');
+            return redirect('/adminclassify/create')->with('error','分类添加失败');
         }
     }
 
@@ -109,12 +110,18 @@ class ClassifyController extends Controller
      */
     public function edit($id)
     {
+        //获取所有分类信息
         $info=DB::table("type")->select(DB::raw('*,concat(path,"",id) as paths'))->orderBy('paths')->get();
-        $cate = $this->getcates($info); 
+        $cate = $this->getcates($info);
+        foreach($cate as $v){
+            $ids[] = $v->id; 
+        }
+        // dd($ids);
+        //获取当前分类信息
         $data = DB::table('type')->where('id','=',$id)->first();
-        // dd($cate);
+        // dd($data);
         //加载编辑模板
-        return view('Admin.classify.edit',['cate'=>$cate,'data'=>$data]);
+        return view('Admin.classify.edit',['cate'=>$cate,'data'=>$data,'ids'=>$ids]);
     }
 
     /**
@@ -124,7 +131,7 @@ class ClassifyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AdminClassify $request, $id)
     {
         //获取请求数据name pid
         // dd($request->all());
@@ -142,9 +149,9 @@ class ClassifyController extends Controller
         }
          //添加数据库
         if(DB::table('type')->where('id','=',$id)->update($data)){
-            return redirect('/adminclassify')->with('success','修改成功');
+            return redirect('/adminclassify')->with('success','分类修改成功');
         }else{
-            return redirect('/adminclassify/{$id}/edit')->with('error','修改失败');
+            return redirect('/adminclassify/{$id}/edit')->with('error','分类修改失败');
         }
     }
 
@@ -164,8 +171,19 @@ class ClassifyController extends Controller
         }
         //执行删除
         if(DB::table('type')->where('id','=',$id)->delete()){
-            return redirect('/adminclassify')->with('success','删除成功');
+            return redirect('/adminclassify')->with('success','分类删除成功');
         }
 
+    }
+
+    public function del(Request $request){
+       $ids = $request->input('ids');
+       // echo json_encode($ids);
+       $i = 0;
+       foreach($ids as $id){
+         DB::table('type')->where('id','=',$id)->delete();      
+         $i++;
+       }
+        echo '成功删除'.$i.'项数据';
     }    
 }

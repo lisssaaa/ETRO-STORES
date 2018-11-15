@@ -24,6 +24,39 @@ class AdminuserController extends Controller
         $users = DB::table('admin')->where('name','like','%'.$k.'%')->paginate(5);
         return view('Admin.admin.index',['users'=>$users,'request'=>$request]);
     }
+    //分配角色方法
+    public function role($id){
+        //获取所有角色
+        $role = DB::table('role')->get();
+        //获取用户信息
+        $info = DB::table('admin')->where('id','=',$id)->first();
+        //获取用户角色
+        $data = DB::table('admin_role')->where('uid','=',$id)->get();
+        if(count($data)){
+            //有角色信息遍历
+            foreach($data as $v){
+                $rid[] = $v->rid;
+            }
+            return view('Admin.admin.role',['info'=>$info,'role'=>$role,'rid'=>$rid]);
+        }else{
+             //加载角色分配模板
+             return view('Admin.admin.role',['info'=>$info,'role'=>$role,'rid'=>array()]);
+        }
+       
+    }
+    //保存角色
+    public function saverole(Request $request,$uid){
+        // echo $uid;
+        $data = $request->only('rid');
+        // dd($data['rid']);
+        //删除原有的rid
+        DB::table('admin_role')->where('uid','=',$uid)->delete();
+        //遍历data，uid--rid 逐条存入admin_role
+        foreach ($data['rid'] as $value) { 
+            DB::table('admin_role')->insert(['uid'=>$uid,'rid'=>$value]);
+        }
+        return redirect('/adminusers')->with('success','分配角色成功');
+    } 
 
     /**
      * Show the form for creating a new resource.
@@ -48,9 +81,9 @@ class AdminuserController extends Controller
         $data = $request->except(['_token','repassword']);
         $data['password'] = Hash::make($data['password']);
         if(DB::table('admin')->insert($data)){
-            return redirect('/adminusers')->with('success','添加成功');
+            return redirect('/adminusers')->with('success','管理员添加成功');
         }else{
-            return redirect('/adminusers')->with('error','添加失败');
+            return redirect('/adminusers')->with('error','管理员添加失败');
         }
     }
 
@@ -92,9 +125,9 @@ class AdminuserController extends Controller
         $data = $request->only(['name','password']);
         $data['password'] = Hash::make($data['password']);
         if(DB::table('admin')->where('id','=',$id)->update($data)){
-            return redirect('/adminusers')->with('success','修改成功');
+            return redirect('/adminusers')->with('success','管理员修改成功');
         }else{
-            return redirect('/adminusers')->with('error','修改失败');
+            return redirect('/adminusers')->with('error','管理员修改失败');
         }
     }
 
@@ -106,10 +139,11 @@ class AdminuserController extends Controller
      */
     public function destroy($id)
     {
-        if(DB::table('admin')->where('id','=',$id)->delete()){
-            return redirect('/adminusers')->with('success','删除成功');
+        //删除admin表和admin_role表中的数据
+        if(DB::table('admin')->where('id','=',$id)->delete() && DB::table('admin_role')->where('uid','=',$id)->delete()){
+            return redirect('/adminusers')->with('success','管理员删除成功');
         }else{
-            return redirect('/adminusers')->with('error','删除失败');
+            return redirect('/adminusers')->with('error','管理员删除失败');
         }
     }
 }

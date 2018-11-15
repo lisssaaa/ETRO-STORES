@@ -63,7 +63,7 @@
                   <div class="col-sm-6">
                     <select class="form-control" name="pid">
                       <!-- 顶级分类，pid=0 -->
-                      <option value="0"><font style="vertical-align: inherit;">◆◆|顶级分类</font></option>
+                      <option value="0"><font style="vertical-align: inherit;">顶级分类</font></option>
                       <!-- 子分类，pid= -->
                       @foreach($cate as $value)
                        <option value="{{$value->id}}"><font style="vertical-align: inherit;">{{$value->name}}</font></option>

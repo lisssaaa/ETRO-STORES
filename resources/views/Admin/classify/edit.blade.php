@@ -65,10 +65,10 @@
                     <select class="form-control" name="pid">
                       <!-- <option value="{{$data->id}}" selected><font style="vertical-align: inherit;">{{$data->name}}</font></option> -->
                       <!-- 顶级分类，pid=0 -->
-                      <option value="0"><font style="vertical-align: inherit;">◆◆|顶级分类</font></option>                      
+                      <option value="0"><font style="vertical-align: inherit;">顶级分类</font></option>                      
                       <!-- 子分类，pid= -->
                       @foreach($cate as $value)
-                       <option value="{{$value->id}}"><font style="vertical-align: inherit;">{{$value->name}}</font></option>                                 
+                       <option value="{{$value->id}}" @if($value->id==$data->pid) selected @endif><font style="vertical-align: inherit;">{{$value->name}}</font></option>                                 
                       @endforeach 
                       <script>
                         alert(length($('option'));

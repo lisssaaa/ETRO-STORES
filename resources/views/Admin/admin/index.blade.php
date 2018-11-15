@@ -55,7 +55,9 @@
               </div>
               <div class="btn-group">
                 <a href="/adminusers/create" class="btn btn-warning"><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;<font style="vertical-align: inherit;">添加管理员</font></a>
-              </div>              
+                
+              </div>  
+
             </div>
             <div class="col-md-offset-9">
             <form class="form-inline" action="/adminusers" method="get">
@@ -67,29 +69,25 @@
                 </div>
               </form>
             </div>
-           <!-- <a href="/adminclassify/create" class="btn btn-theme"><i class="fa fa-cog"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 添加分类</font></font></a> -->
+
            <hr />
            <table class="table table-striped table-advance table-hover"> 
             <thead> 
              <tr> 
               <th><i class="fa fa-bullhorn"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> id</font></font></th> 
-              <th class="hidden-phone"><i class="fa fa-question-circle"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 管理员名</font></font></th> 
-              <!-- <th><i class="fa fa-bookmark"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 父id</font></font></th>  -->
-              <!-- <th><i class="fa fa-bookmark"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 路径</font></font></th>
-              <th><i class=" fa fa-edit"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 状态</font></font></th> 
-              <th></th>  -->
+              <th class="hidden-phone"><i class="fa fa-question-circle"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 管理员名</font></th>
              </tr> 
             </thead> 
             <tbody> 
               @foreach($users as $key=>$value)
              <tr> 
-              <td><a href="basic_table.html#"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$key}}</font></font></a></td> 
+              <td><a href="basic_table.html#"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$key+1}}</font></font></a></td> 
               <td class="hidden-phone"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{$value->name}}</font></font></td> 
               
               <td> 
                 <table>
-                  <tr>
-                    <td><a href="#" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-lock"></span></a></td>
+                  <tr>                    
+                    <td><a href="/adminrole/{{$value->id}}" class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-user"></span></a></td>
                     <td>&nbsp;&nbsp;</td>
                     <td>
                       <a href="/adminusers/{{$value->id}}/edit" class="btn btn-primary btn-xs">
