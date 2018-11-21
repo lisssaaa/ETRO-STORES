@@ -20,9 +20,19 @@ class WishController extends Controller
         $uid = DB::table('users')->where('username','=',session('home'))->first()->id;
         //获取wish表
         $info = DB::table('wish')->where('uid','=',$uid)->get();
-        foreach($info as $value){
-            $good[] = DB::table('goods')->where('id','=',$value->gid)->first();
+        if(!$info){dd($info);}
+        // dd($info);
+        if(count($info)>0){
+            foreach($info as $key=>$value){
+                $good[$key] = DB::table('goods')->where('id','=',$value->gid)->first();
+                //将wish表id存入
+                $good[$key]->gid = $good[$key]->id;
+                $good[$key]->id = $value->id;
+            }
+        }else{
+           $good = ''; 
         }
+        
         return view('Home.my.wishlist',['good'=>$good,'uid'=>$uid]);
     }
 
@@ -53,9 +63,21 @@ class WishController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //添加到收藏夹
     public function show($id)
     {
-        //
+        // echo 0;
+        //获取用户id
+        $uid = DB::table('users')->where('username','=',session('home'))->first()->id;
+        $sql = "select * from wish where uid={$uid} and gid={$id}";
+        $count = count(DB::select($sql));
+        // echo $count;
+        if(count(DB::select($sql))>0){
+            echo 1;
+        }else{
+            DB::table('wish')->insert(['uid'=>$uid,'gid'=>$id]);
+            echo 0;
+        }
     }
 
     /**
@@ -97,5 +119,8 @@ class WishController extends Controller
         if(DB::delete($sql)){
             return redirect('/mywish');
         }
+    }
+    public function del(Request $request){
+        echo 1;
     }
 }

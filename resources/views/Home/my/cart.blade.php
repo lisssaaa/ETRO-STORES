@@ -34,8 +34,9 @@
      <div class="entry-content"> 
       <div class="entry-summary"> 
        <div class="woocommerce"> 
+        @if($arr)
         <form action="" method="post"> 
-         <table class="shop_table shop_table_responsive cart" cellspacing="0"> 
+         <table class="shop_table shop_table_responsive cart" cellspacing="0">           
           <thead> 
            <tr> 
             <th colspan="2" class="product-remove">&nbsp;</th>           
@@ -46,40 +47,108 @@
            </tr> 
           </thead> 
           <tbody>
-          @foreach($arr as $value) 
+          
+          @foreach($arr as $key=>$value) 
            <tr class="cart_item">
-            <td><input type="checkbox"></td>             
+            <td><input type="checkbox" value="{{$value['id']}}"></td>             
             <td class="product-thumbnail"> 
               <img src="/uploads/goods/{{$value['pic']}}" alt=""> 
             </td> 
-            <td class="product-name" data-title="Product"> <a href="simple_product.html">{{$value['name']}}</a> </td> 
-            <td class="product-price" data-title="Price"> <span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">￥</span>{{$value['price']}}</span> </td> 
+            <td class="product-name" data-title="Product"><a href="simple_product.html">{{$value['name']}}</a> </td> 
+            <td class="product-price" data-title="Price">{{$value['price']}}</td> 
             <td class="product-quantity" data-title="Quantity"> 
              <div class="quantity"> 
-              <input type="number" step="1" min="1" name="num" value="{{$value['num']}}" class="input-text qty text" size="4" pattern="[0-9]*" inputmode="numeric" /> 
-             </div> </td> 
-            <td class="product-subtotal" data-title="Total"> <span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">￥</span>{{$value['price']*$value['num']}}</span> </td> 
-            <td class="product-remove"> <a href="#" class="remove" title="Remove this item"><i class="fa fa-times" aria-hidden="true"></i></a> </td> 
-           </tr>
+              <a class="btn btn-default dec" href="javascript:void(0)">─</a>              
+              <input type="number" step="1" min="1" name="num" value="{{$value['num']}}" cid="{{$value['id']}}" class="input-text qty text" size="4" pattern="[0-9]*" inputmode="numeric" />              
+              <a class="btn btn-default add" href="javascript:void(0)">+</a>
+             </div> 
+           </td> 
+            <td class="product-subtotal" data-title="Total">{{$value['price']*$value['num']}}</td> 
+            <td class="product-remove">
+              <form action="/mycart/{{$value['id']}}" method="post">
+                {{csrf_field()}}
+                {{method_field('DELETE')}}
+                <button type="submit" class="btn-xs btn-warning"><i class="fa fa-trash-o"></i></button>                
+              </form>
+            </td> 
+           </tr>           
+           
            @endforeach 
            <tr class="order-total"> 
             <td colspan="7">               
                 <a href="javascript:void(0)" class="btn-xs btn-default all">全选</a> 
                 <a href="javascript:void(0)" class="btn-xs btn-default">反选</a>  
-                <a href="javascript:void(0)" class="btn-xs btn-default">删除</a>           
+                <a href="javascript:void(0)" class="btn-xs btn-default">批量删除</a>           
             </td>               
            </tr> 
           </tbody>
           <script>
+            //复选框改变            
+            $(':checkbox').each(function(){   
+              $(this).change(function(){                
+                gettotal(); 
+              });
+            });
+
+            //修改件数和总额函数
+            function gettotal(){
+              $('#i').html($(':checked').length);
+              var total = 0.00;
+              $(':checked').each(function(){ 
+                //获取该行总计金额             
+                t = $(this).parents('td').siblings('.product-subtotal').text();
+                if(t != ''){
+                  total += parseFloat(t); 
+                }                  
+              });
+              $('#total').html(total);
+            }
+            
+            //数量加减
+            $('.add').click(function(){
+              num = $(this).siblings('input');
+              num.val(parseInt(num.val())+1);              
+              //使用create方法进行更新
+              $.get('/mycart/create',{id:num.attr('cid'),num:num.val()},function(data){ 
+                //获取商品单价
+                price = num.parents('td').prev().text();
+                total = parseFloat(price)*num.val();
+                //修改该行总计值
+                num.parents('td').next().text(total);
+                // alert(total);
+                gettotal();  
+              });
+              
+            });
+            $('.dec').click(function(){
+              num = $(this).siblings('input');
+              if(num.val()!=1){
+                 num.val(parseInt(num.val())-1);
+                //使用create方法进行更新
+                $.get('/mycart/create',{id:num.attr('cid'),num:num.val()},function(data){  
+                  //获取商品单价
+                  price = num.parents('td').prev().text();
+                  total = parseFloat(price)*num.val();
+                  //修改该行总计值
+                  num.parents('td').next().text(total);
+                  // alert(total);
+                  gettotal();  
+                });
+              }             
+            });
+
+            //全选反选删除
             bool=true;                
             $('.all').click(function(){
               //选择表单中的checkbox类型，设置所有的checked=true全选
               $(':checkbox').prop('checked',bool);
+              gettotal(); 
               bool=!bool;
             }).next().click(function(){
               //选择表单中checkbox类型，遍历集合中的每一个元素，将checked设置为与自身相反的值
               $(':checkbox').each(function(){
                 $(this).prop('checked',!$(this).prop('checked'));
+                gettotal(); 
               });
             }).next().click(function(){                  
               if(!$(':checked').length){
@@ -88,41 +157,50 @@
                 ids = [];
                 //获取所有选中的复选框并遍历
                 $(':checked').each(function(){
-                  //将id存入数组
-                  ids.push($(this).val());
-                  $(this).parents('tr').remove();
+                  if($(this).val() != ''){
+                    //将id存入数组
+                    ids.push($(this).val());                    
+                  }                  
                 });
-                if(confirm('您确定要删除吗？')){                    
-                  $.get('/mycartdel',{ids:ids},function(data){
-                   alert(data);
-                  });                                       
-                }
+                // alert(ids);
+                // if(confirm('您确定要删除吗？')){                                  
+                    $.get('/cartdel',{ids:ids},function(data){
+                      console.log(data);
+                    })
+                  // $(':checked').each(function(){
+                  //   $(this).parents('tr').remove();
+                  // });
+                  // gettotal();                                        
+                // }
               }              
-            });
+            });            
           </script> 
          </table> 
         </form> 
         <div class="cart-collaterals"> 
          <div class="products-wrapper"> 
-          <div class="cart_totals ">           
-           <table cellspacing="0" class="shop_table shop_table_responsive"> 
-            <tbody> 
-              <tr class="order-total"> 
-                <th>已选件数：</th> 
-                <td data-title="Total"> <strong><span class="woocommerce-Price-amount amount"><!-- <span class="woocommerce-Price-currencySymbol">$</span> -->3</span></strong>件 </td> 
-               </tr>              
-               <tr class="order-total"> 
-                <th>合计(不含运费)：</th> 
-                <td data-title="Total"> <strong><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">￥</span>300.00</span></strong> </td> 
-               </tr> 
-            </tbody> 
-           </table> 
-           <div class="wc-proceed-to-checkout"> 
-            <a href="checkout.html" class="checkout-button button alt wc-forward">去结算</a> 
+          <div class="cart_totals ">
+          <table class="shop_table shop_table_responsive cart" cellspacing="0"> 
+            <thead>
+              <tr class="cart_item">
+                <th>已选：</th>
+                <th><strong><span style="color:orange" id="i">0</span></strong>件</td>
+              </tr>
+              <tr class="cart_item">
+                <th>合计(不含运费)：</th>
+                <th><strong><span style="color:orange" id="total">0.00</span>元</strong></td>
+              </tr>
+            </thead>
+          </table>
+           <div style="float:right"> 
+            <a href="/shop/create" class="btn-lg btn-warning">去结算</a> 
            </div> 
           </div> 
          </div> 
-        </div> 
+        </div>
+        @else
+        购物车为空！
+        @endif 
        </div> 
       </div> 
      </div> 

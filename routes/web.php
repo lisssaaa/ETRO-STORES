@@ -37,18 +37,43 @@ Route::group(['middleware'=>'adminlogin'],function(){
 	Route::resource('/adminuser','Admin\UserController');
 	//ajax通过开关修改表格内容---状态
 	Route::get('/changestatus','Admin\AdminController@status');
+	//订单管理
+	Route::resource('/adminorder','Admin\OrderController');
+	//管理
+	
 });
 
 //前台
 //登录
 Route::resource('/login','Home\LoginController');
+//校验码
+Route::get('/code','Home\LoginController@code');
+//邮箱激活
+Route::get('/jihuo','Home\LoginController@jihuo');
 //前台首页
 Route::resource('/','Home\IndexController');
-Route::group(['middleware'=>'login'],function(){
+//商品列表
+Route::resource('/shop','Home\ShopController');
+Route::group(['middleware'=>'login'],function(){	
 	//个人中心
 	Route::resource('/myaccount','Home\MyController');
+
+	//付款
+	Route::get('/pay','Home\ShopController@orderpay');
+	Route::get('/returnurl/{data}','Home\ShopController@returnurl');
+	//确认收货
+	Route::get('/confirm/{oid}','Home\ShopController@confirm');
+	//去评价
+	Route::get('/comment/{oid}','Home\ShopController@comment');
+
+	//收货地址
+	Route::resource('/myaddress','Home\AddressController');
+	//ajax城市级联
+	Route::get('/city','Home\AddressController@city');
 	//购物车
 	Route::resource('/mycart','Home\CartController');
+	Route::get('/cartdel','Home/CartController@del');
 	//收藏夹
 	Route::resource('/mywish','Home\WishController');
+	Route::get('/wishdel','Home/WishController@del');
 });

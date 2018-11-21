@@ -54,10 +54,10 @@ return [
     | used globally for all e-mails that are sent by your application.
     |
     */
-
+    // 发送方信息
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_USERNAME', 'hello@example.com'),
+        'name' => env('MAIL_FROM_NAME', 'ETRO STORES'),
     ],
 
     /*

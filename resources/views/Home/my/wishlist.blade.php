@@ -34,8 +34,8 @@
             <div class="entry-content">
               <div class="entry-summary">
                 <div id="yith-wcwl-messages"></div>
-                <form id="yith-wcwl-form" action="" method="post" class="woocommerce">
-                 
+                @if($good)
+                <form id="yith-wcwl-form" action="" method="post" class="woocommerce">                 
                   <!-- WISHLIST TABLE -->
                   <table class="shop_table cart wishlist_table">
                     <thead>
@@ -62,7 +62,7 @@
                     <tbody>
                       @foreach($good as $value)
                       <tr>                      
-                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox" value="{{$value->id}}"></td>
                         <td><img src="/uploads/goods/{{$value->pic}}" width="60px" alt=""></td> 
                         <td class="product-name">                          
                           <a href="simple_product.html">{{$value->name}}</a>
@@ -82,7 +82,7 @@
                         <td class="product-add-to-cart col-xs-2">
                           <form action="/mycart" method="post">
                             {{csrf_field()}}                                                         
-                            <input type="hidden" name="gid" value="{{$value->id}}">                        
+                            <input type="hidden" name="gid" value="{{$value->gid}}">                        
                             <button  type="submit" class="btn btn-warning">加入购物车</button>                            
                           </form>                                                 
                         </td>
@@ -102,7 +102,7 @@
                         <td colspan="7">               
                             <a href="javascript:void(0)" class="btn-xs btn-default all">全选</a> 
                             <a href="javascript:void(0)" class="btn-xs btn-default">反选</a>  
-                            <a href="javascript:void(0)" class="btn-xs btn-default">删除</a>             
+                            <a href="javascript:void(0)" class="btn-xs btn-default">批量删除</a>             
                         </td>               
                        </tr> 
                     </tbody>
@@ -125,15 +125,20 @@
                           ids = [];
                           //获取所有选中的复选框并遍历
                           $(':checked').each(function(){
+                            if($(this).val() != ''){
                               //将id存入数组
                               ids.push($(this).val());
-                              $(this).parents('tr').remove();
+                            }                              
                           });
-                          if(confirm('您确定要删除吗？')){                    
-                              $.get('/mywishdel',{ids:ids},function(data){
-                                 alert(data);
-                            });                                       
-                          }
+                          // alert(ids);
+                          // if(confirm('您确定要删除吗？')){                    
+                            $.get('/wishdel',{ids:ids},function(data){
+                                alert(data);
+                            });   
+                          //   $(':checked').each(function(){
+                          //     $(this).parents('tr').remove();
+                          //   });                                    
+                          // }
                         }              
                       });
                   </script>
@@ -156,7 +161,10 @@
                     </tfoot>
                   </table>
                 </form>
-              </div>
+                @else
+                您未收藏任何商品！
+                @endif
+              </div>              
             </div>
           </div>
         </div>

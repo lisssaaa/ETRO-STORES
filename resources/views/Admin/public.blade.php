@@ -191,7 +191,14 @@
                           <i class="fa fa-cogs"></i>
                           <span>分类管理</span>
                       </a>                     
-                  </li>                  
+                  </li> 
+                  <li class="sub-menu">
+                      <a href="/adminorder" >
+                          <span class="glyphicon glyphicon-list-alt"></span>
+                          <span>&nbsp;&nbsp;&nbsp;订单管理</span>
+                      </a>                      
+                  </li>  
+                                 
                   <li class="sub-menu"> 
                       <a href="javascript:;" >                     
                           <i class="fa fa-book"></i>

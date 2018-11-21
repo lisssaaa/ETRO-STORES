@@ -28,23 +28,7 @@
    @section('location','首页')
    
    @section('content') 
-   <!-- <div class="listings-title"> 
-    <div class="container"> 
-     <div class="wrap-title"> 
-      <h1>Home</h1> 
-      <div class="bread"> 
-       <div class="breadcrumbs theme-clearfix"> 
-        <div class="container"> 
-         <ul class="breadcrumb"> 
-          <li> <a href="#">Home</a> <span class="go-page"></span> </li> 
-          <li class="active"> <span>Home</span> </li> 
-         </ul> 
-        </div> 
-       </div> 
-      </div> 
-     </div> 
-    </div> 
-   </div>  -->
+   
    <div class="container"> 
     <div class="row"> 
      <div id="contents" role="main" class="main-page  col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
@@ -130,6 +114,7 @@
                         @endforeach
                        </ul> 
                        @endif
+                       
                      </li> 
                       @endforeach 
                      </ul>

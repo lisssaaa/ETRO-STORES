@@ -199,7 +199,7 @@
               }  
 
               //分页，并设置样式
-              $('#page').children('button').eq(0).attr('class','btn btn-warning');
+              $('#page').children('button').eq(0).attr('class','btn btn-warning active');
               function page(t,p){
                 //ajax请求数据
                 $.get('/adminuser',{page:p},function(data){

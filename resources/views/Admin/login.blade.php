@@ -44,6 +44,7 @@
 		            @if(session('error'))
 		            <label style="color:red">{{session('error')}}</label>
 		            @endif
+		            
 		            <hr>
 		            <!-- <label class="checkbox">
 		                <span class="pull-right">

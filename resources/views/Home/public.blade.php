@@ -22,7 +22,24 @@
   <link rel="stylesheet" href="/static/home/css/app-orange.css" id="theme_color" /> 
   <link rel="stylesheet" href="" id="rtl" /> 
   <link rel="stylesheet" href="/static/home/css/app-responsive.css" />
-  <script type="text/javascript" src="/static/home/js/jquery/jquery.min.js"></script> 
+  <script type="text/javascript" src="/static/home/js/jquery/jquery.min.js"></script>
+  <style>
+    .imgg{width: 16px;
+          height: 16px;
+          position: relative;
+          left: 0px;
+          background: white;
+          background-clip: padding-box;
+          /*border: solid 5px #ffd9b3;*/
+          background-size:cover;
+          display: block;
+          border-radius: 50%;
+          -webkit-border-radius:8px;
+          -moz-border-radius:8px;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;}
+  </style> 
  </head> 
  <body class="page page-id-6 home-style1"> 
   <div class="body-wrapper theme-clearfix"> 
@@ -91,9 +108,16 @@
          <div class="widget-1 widget-first widget nav_menu-2 widget_nav_menu"> 
           <div class="widget-inner"> 
            <ul id="menu-checkout" class="menu">
-           @if(session('home')) 
+           @if(session('home'))           
+            <li> <a href="/myaccount/{{$u['uid']}}/edit"> 
+              @if($u['pic'])
+              <img class="imgg" src="/uploads/users/{{$u['pic']}}" alt=""> 
+              @else
+              <img class="imgg" data-src="holder.js/100%x180" alt="100%x180" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTcxIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE3MSAxODAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MTgwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTY3MjEwYjMzYjAgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNjcyMTBiMzNiMCI+PHJlY3Qgd2lkdGg9IjE3MSIgaGVpZ2h0PSIxODAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI1OS41NTQ2ODc1IiB5PSI5NC41Ij4xNzF4MTgwPC90ZXh0PjwvZz48L2c+PC9zdmc+" data-holder-rendered="true">
+              @endif
+            </a></li>  
             <li> <a href="/myaccount"> <span>{{session('home')}}</span> </a></li>            
-            <li class="menu-checkout"> <a class="item-link" href="/login/create"> <span class="menu-title">退出</span> </a> </li> 
+            <li class="menu-checkout"> <a class="item-link" href="/login/create"> <span class="menu-title">注销</span> </a> </li> 
            @else
            <li> <a href="javascript:void(0);" data-toggle="modal" data-target="#login_form"> <span>登录</span> </a>  </li> 
            @endif
@@ -120,9 +144,9 @@
             <form method="get" action=""> 
              <div> 
               <input type="text" value="" name="s" placeholder="请输入商品关键字" /> 
-              <div class="cat-wrapper"> 
+              <!-- <div class="cat-wrapper"> 
                <label class="label-search"> <select name="search_category" class="s1_option"> <option value="">所有分类</option> <option value="8">Computers &amp; Laptops</option> <option value="13">Computers &amp; Networking</option> <option value="14">Smartphones &amp; Tablet</option> <option value="15">Home Furniture</option> <option value="16">Home Appliances</option> <option value="17">Electronic Component</option> <option value="18">Household Goods</option> <option value="32">Appliances</option> <option value="49">Accessories</option> <option value="51">Electronics</option> <option value="78">Televisions</option> <option value="80">Cameras &amp; Accessories</option> </select> </label> 
-              </div> 
+              </div>  -->
               <button type="submit" title="Search" class="fa fa-search button-search-pro form-button"></button> 
              </div> 
             </form> 
@@ -136,7 +160,9 @@
           <div class="top-form top-form-minicart etrostore-minicart pull-right"> 
            <div class="top-minicart-icon pull-right"> 
             <i class="fa fa-shopping-cart"></i> 
-            <a class="cart-contents" href="cart.html" title="View your shopping cart"> <span class="minicart-number">6</span> </a> 
+            @if($u['count']!=0) 
+            <a class="cart-contents" href="cart.html" title="View your shopping cart"> <span class="minicart-number">{{$u['count']}}</span> </a>
+            @endif 
            </div> 
            <!-- 头部购物车 -->
            <div class="wrapp-minicart"> 
@@ -144,36 +170,49 @@
              <div class="number-item">                
               <span>购物车</span> 
              </div> 
-             <ul class="minicart-content"> 
-              <li> <a href="simple_product.html" class="product-image"> <img width="100" height="100" src="/static/home/images/1903/45-150x150.jpg" class="attachment-100x100 size-100x100 wp-post-image" alt="" srcset="/static/home/images/1903/45-150x150.jpg 150w, /static/home/images/1903/45-300x300.jpg 300w, /static/home/images/1903/45-180x180.jpg 180w, /static/home/images/1903/45.jpg 600w" sizes="(max-width: 100px) 100vw, 100px" /> </a> 
+             <ul class="minicart-content">
+             @if($u['goods'] != 0)
+             @foreach($u['goods'] as $value) 
+              <li> <a href="simple_product.html" class="product-image"> <img width="100" height="100" src="/uploads/goods/{{$value['pic']}}" class="attachment-100x100 size-100x100 wp-post-image" alt=""  sizes="(max-width: 100px) 100vw, 100px" /> </a> 
                <div class="detail-item"> 
                 <div class="product-details"> 
-                 <h4> <a class="title-item" href="simple_product.html">商品1</a> </h4> 
+                 <h4> <a class="title-item" href="simple_product.html">{{$value['name']}}</a> </h4> 
                  <div class="product-price"> 
-                  <span class="price"> <span class="woocommerce-Price-amount amount"> <span class="woocommerce-Price-currencySymbol">￥</span>190.00 </span> </span> 
+                  <span class="price"> <span class="woocommerce-Price-amount amount"> <span class="woocommerce-Price-currencySymbol">￥</span>{{$value['price']}}</span> </span> 
                   <div class="qty"> 
-                   <span class="qty-number">1</span> 
+                   <span class="qty-number">{{$value['num']}}</span> 
                   </div> 
                  </div> 
                  <div class="product-action clearfix"> 
-                  <a href="#" class="btn-remove" title="Remove this item"> <span class="fa fa-trash-o"></span> </a> 
-                  <a class="btn-edit" href="cart.html" title="View your shopping cart"> <span class="fa fa-pencil"></span> </a> 
+                  <form action="/mycart/{{$value['id']}}" method="post">
+                    {{csrf_field()}}
+                    {{method_field('DELETE')}}
+                    <button type="submit" class="btn-remove"><span class="fa fa-trash-o"></span></button>                
+                  </form>
+                  <!-- <a href="#" class="btn-remove" title="Remove this item"> <span class="fa fa-trash-o"></span> </a>  -->
+                  <!-- <a class="btn-edit" href="cart.html" title="View your shopping cart"> <span class="fa fa-pencil"></span> </a>  -->
                  </div> 
                 </div> 
                </div>
-              </li>              
+              </li> 
+              <?php $u['total']+=$value['price']*$value['num'] ?>
+              
+              @endforeach
+              @else
+              <li>购物车为空！</li>
+              @endif             
              </ul> 
              <div class="cart-checkout"> 
               <div class="price-total"> 
                <span class="label-price-total">总计</span> 
-               <span class="price-total-w"> <span class="price"> <span class="woocommerce-Price-amount amount"> <span class="woocommerce-Price-currencySymbol">￥</span>540.00 </span> </span> </span> 
+               <span class="price-total-w"> <span class="price"> <span class="woocommerce-Price-amount amount"> <span class="woocommerce-Price-currencySymbol">￥</span>{{$u['total']}}</span> </span> </span> 
               </div> 
               <div class="cart-links clearfix"> 
                <div class="cart-link"> 
                 <a href="/mycart" title="Cart">去购物车</a> 
                </div> 
                <div class="checkout-link"> 
-                <a href="" title="Check Out">去结算</a> 
+                <a href="/shop/create" title="Check Out">去结算</a> 
                </div> 
               </div> 
              </div> 
@@ -199,24 +238,7 @@
     <div class="header-bottom clearfix"> 
      <div class="container"> 
       <div class="rows"> 
-       <!-- 导航栏 --> 
-       <!-- <div id="main-menu" class="main-menu"> 
-        <nav id="primary-menu" class="primary-menu"> 
-         <div class="navbar-inner navbar-inverse">           
-          <ul id="menu-primary-menu-1" class="nav nav-pills nav-mega etrostore-mega etrostore-menures"> 
-           <li><a href="home.html">Home</a></li> 
-           <li><a href="cart.html">Cart</a></li> 
-           <li><a href="checkout.html">Checkout</a></li> 
-           <li><a href="my_account.html">My Account</a></li> 
-           <li><a href="shop.html">Shop</a></li> 
-           <li><a href="simple_product.html">Simple Product</a></li> 
-           <li><a href="about_us.html">About Us</a></li> 
-           <li><a href="contact_us.html">Contact Us</a></li> 
-          </ul> 
-         </div> 
-        </nav> 
-       </div>       
-      </div>  -->
+       
      </div> 
     </div> 
    </header> 
@@ -224,7 +246,7 @@
    <div class="listings-title"> 
     <div class="container"> 
      <div class="wrap-title"> 
-      <h1>@yield('title')</h1> 
+      <h1>@yield('this')</h1> 
       <div class="bread"> 
        <div class="breadcrumbs theme-clearfix"> 
         <div class="container"> 
@@ -246,127 +268,13 @@
     <div class="container"> 
      <div class="vc_row wpb_row vc_row-fluid"> 
       <div class="wpb_column vc_column_container vc_col-sm-12"> 
-       <div class="vc_column-inner "> 
-        <div class="wpb_wrapper"> 
-         <div id="sw_testimonial01" class="testimonial-slider client-wrapper-b carousel slide " data-interval="0"> 
-          <div class="carousel-cl nav-custom"> 
-           <a class="prev-test fa fa-angle-left" href="#sw_testimonial01" role="button" data-slide="prev"><span></span></a> 
-           <a class="next-test fa fa-angle-right" href="#sw_testimonial01" role="button" data-slide="next"><span></span></a> 
-          </div> 
-          <div class="carousel-inner"> 
-           <div class="item active"> 
-            <div class="item-inner"> 
-             <div class="image-client pull-left"> 
-              <a href="#" title=""> <img width="127" height="127" src="/static/home/images/1903/tm3.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" /> </a> 
-             </div> 
-             <div class="client-say-info"> 
-              <div class="client-comment">
-                In auctor ex id urna faucibus porttitor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.... 
-              </div> 
-              <div class="name-client"> 
-               <h2><a href="#" title="">Jerry</a></h2> 
-               <p>Web Developer</p> 
-              </div> 
-             </div> 
-            </div> 
-            <div class="item-inner"> 
-             <div class="image-client pull-left"> 
-              <a href="#" title=""> <img width="127" height="127" src="/static/home/images/1903/tm1.png" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" /> </a> 
-             </div> 
-             <div class="client-say-info"> 
-              <div class="client-comment">
-                In auctor ex id urna faucibus porttitor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.... 
-              </div> 
-              <div class="name-client"> 
-               <h2> <a href="#" title="">David Gand</a> </h2> 
-               <p>Designer</p> 
-              </div> 
-             </div> 
-            </div> 
-           </div> 
-           <div class="item "> 
-            <div class="item-inner"> 
-             <div class="image-client pull-left"> 
-              <a href="#" title=""> <img width="127" height="127" src="/static/home/images/1903/tm2.png" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" /> </a> 
-             </div> 
-             <div class="client-say-info"> 
-              <div class="client-comment">
-                In auctor ex id urna faucibus porttitor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.... 
-              </div> 
-              <div class="name-client"> 
-               <h2> <a href="#" title="">Taylor Hill</a> </h2> 
-               <p>Developer</p> 
-              </div> 
-             </div> 
-            </div> 
-            <div class="item-inner"> 
-             <div class="image-client pull-left"> 
-              <a href="#" title=""> <img width="127" height="127" src="/static/home/images/1903/tm3.jpg" class="attachment-thumbnail size-thumbnail wp-post-image" alt="" /> </a> 
-             </div> 
-             <div class="client-say-info"> 
-              <div class="client-comment">
-                In auctor ex id urna faucibus porttitor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.... 
-              </div> 
-              <div class="name-client"> 
-               <h2> <a href="#" title="">JOHN DOE</a> </h2> 
-               <p>Designer</p> 
-              </div> 
-             </div> 
-            </div> 
-           </div> 
-          </div> 
-         </div> 
-        </div> 
-       </div> 
+      
       </div> 
      </div> 
      <div data-vc-full-width="true" data-vc-full-width-init="false" data-vc-stretch-content="true" class="vc_row wpb_row vc_row-fluid footer-style1 vc_row-no-padding"> 
       <div class="container float wpb_column vc_column_container vc_col-sm-12"> 
        <div class="vc_column-inner "> 
-        <div class="wpb_wrapper"> 
-         <div class="vc_row wpb_row vc_inner vc_row-fluid footer-top"> 
-          <div class="wpb_column vc_column_container vc_col-sm-8"> 
-           <div class="vc_column-inner "> 
-            <div class="wpb_wrapper"> 
-             <div class="wpb_text_column wpb_content_element "> 
-              <div class="wpb_wrapper"> 
-               <div class="wrap-newletter"> 
-                <h3>NEWSLETTER SIGNUP</h3> 
-                <form id="mc4wp-form-1" class="mc4wp-form mc4wp-form-275" method="post" data-id="275" data-name=""> 
-                 <div class="mc4wp-form-fields"> 
-                  <div class="newsletter-content"> 
-                   <input type="email" class="newsletter-email" name="EMAIL" placeholder="Your email" required="" /> 
-                   <input class="newsletter-submit" type="submit" value="Subscribe" /> 
-                  </div> 
-                 </div> 
-                 <div class="mc4wp-response"></div> 
-                </form> 
-               </div> 
-              </div> 
-             </div> 
-            </div> 
-           </div> 
-          </div> 
-          <div class="wpb_column vc_column_container vc_col-sm-4"> 
-           <div class="vc_column-inner "> 
-            <div class="wpb_wrapper"> 
-             <div class="wpb_raw_code wpb_content_element wpb_raw_html"> 
-              <div class="wpb_wrapper"> 
-               <div class="shop-social"> 
-                <ul> 
-                 <li> <a href="#"> <i class="fa fa-facebook"></i> </a> </li> 
-                 <li> <a href="#"> <i class="fa fa-twitter"></i> </a> </li> 
-                 <li> <a href="#"> <i class="fa fa-google-plus"></i> </a> </li> 
-                 <li> <a href="#"> <i class="fa fa-linkedin"></i> </a> </li> 
-                 <li> <a href="#"> <i class="fa fa-pinterest-p"></i> </a> </li> 
-                </ul> 
-               </div> 
-              </div> 
-             </div> 
-            </div> 
-           </div> 
-          </div> 
-         </div> 
+        <div class="wpb_wrapper">         
          <div class="vc_row wpb_row vc_inner vc_row-fluid footer-bottom"> 
           <div class="item-res wpb_column vc_column_container vc_col-sm-6 vc_col-lg-4 vc_col-md-4 vc_col-xs-12"> 
            <div class="vc_column-inner "> 
@@ -475,25 +383,6 @@
      </div> 
      <div class="vc_row-full-width vc_clearfix"></div> 
     </div> 
-    <div class="footer-copyright style1"> 
-     <div class="container"> 
-      <!-- Copyright text --> 
-      <div class="copyright-text pull-left"> 
-       <p>Copyright &copy; 2017.Company name All rights reserved.<a target="_blank" href="http://sc.chinaz.com/moban/">网页模板</a></p> 
-      </div> 
-      <div class="sidebar-copyright pull-right"> 
-       <div class="widget-1 widget-first widget text-4 widget_text"> 
-        <div class="widget-inner"> 
-         <div class="textwidget"> 
-          <div class="payment"> 
-           <a href="#"> <img src="/static/home/images/1903/paypal.png" alt="payment" title="payment" /> </a> 
-          </div> 
-         </div> 
-        </div> 
-       </div> 
-      </div> 
-     </div> 
-    </div> 
    </footer> 
   </div> 
   <!-- DIALOGS --> 
@@ -519,16 +408,22 @@
        {{csrf_field()}} 
         <div class="col-reg registered-account"> 
          <div class="email-input"> 
-          <input type="text" class="form-control input-text username" name="username" id="username" placeholder="用户名" /> 
+          <input type="text" class="form-control input-text username" name="username"  placeholder="用户名" /> 
          </div> 
          <div class="pass-input"> 
           <input class="form-control input-text password" type="password" placeholder="密码" name="password" id="password" /> 
+         </div>
+         <div class="pass-input"> 
+          <input class="form-control input-text username" type="text" placeholder="验证码" name="code" id="username" />
+          <div class="col-md-offset-7"> 
+            <img src="/code" alt="" onclick="this.src=this.src+'?a=1'"> <span>看不清？换一个</span>  </span>
+          </div>
          </div>
          @if(session('error'))
          <span style="color:red">{{session('error')}}</span>
          @endif 
          <div class="ft-link-p"> 
-          <a href="#" title="Forgot your password">忘记密码?</a> 
+            <a href="#" title="Forgot your password">忘记密码?</a>
          </div> 
          <div class="actions"> 
           <div class="submit-login"> 
@@ -538,7 +433,8 @@
         </div> 
         </form> 
         <div class="col-reg login-customer"> 
-         <h2>没有账号?</h2>              
+         <h2>没有账号?</h2>  
+         <h2>您可以选择以下任意一种方式注册</h2> <hr/>            
          <button class="btn-reg-popup go1">手机号注册</button> 
          <button class="btn-reg-popup go2">邮箱注册</button> 
          <a id="back" href="javascript:void(0)" style="display:none">返回</a>
@@ -552,126 +448,94 @@
         <div class="form-group">
           <div class="input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            <input type="text" class="form-control" placeholder="手机号" aria-describedby="sizing-addon2">
+            <input type="text" name="phone" class="form-control" placeholder="手机号" aria-describedby="sizing-addon2">
             <span class="input-group-btn">
               <a href="javascript:void(0)">发送验证码</a>
             </span>
           </div>
         </div>
         <div class="form-group">
-         <div class="input-group">
-          <span class="input-group-addon"><span class="glyphicon glyphicon-font"></span></span>
-          <input type="text" class="form-control" placeholder="验证码" aria-describedby="sizing-addon2">         
-        </div>
+          <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+            <input type="text" name="username" class="form-control" placeholder="用户名 4-6位字母数字下划线" aria-describedby="sizing-addon2">
+          </div>                 
         </div>
         <div class="form-group">
           <div class="input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-            <input type="password" class="form-control" placeholder="输入密码" aria-describedby="sizing-addon2">
+            <input type="password" name="password" class="form-control" placeholder="输入密码 6-18个字符" aria-describedby="sizing-addon2">
           </div>
         </div>
         <div class="form-group">
           <div class="input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-            <input type="password" class="form-control" placeholder="确认密码" aria-describedby="sizing-addon2">
+            <input type="password" name="repassword" class="form-control" placeholder="确认密码" aria-describedby="sizing-addon2">
           </div>
-          <button type="submit" href="create_account.html" title="Register" class="btn-reg-popup">创建账号</button>          
         </div>  
+        <div class="form-group">
+          <div class="input-group">
+            <span id="n1"  style="color:red"></span><br/>
+            <button type="submit" href="create_account.html" title="Register" class="btn-reg-popup">创建账号</button>
+          </div>
+        </div>       
       </form>
      <!-- 注册2 -->
-       <form action="" method="post" id="reg2" style="display:none">
+       <form action="/login" method="post" id="reg2" style="display:none">
+        {{csrf_field()}}
         <div class="form-group">
           <div class="input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            <input type="email" class="form-control" placeholder="邮箱" aria-describedby="sizing-addon2">            
-          </div>
-        </div>        
-        <div class="form-group">
-          <div class="input-group">
-            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-            <input type="password" class="form-control" placeholder="输入密码" aria-describedby="sizing-addon2">
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="input-group">
-            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-            <input type="password" class="form-control" placeholder="确认密码" aria-describedby="sizing-addon2">
+            <input type="email" name="email" class="form-control" placeholder="邮箱（用于账户激活）" aria-describedby="sizing-addon2">            
           </div>
         </div> 
         <div class="form-group">
           <div class="input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-            <input type="password" class="form-control" placeholder="验证码" aria-describedby="sizing-addon2">
+            <input type="text" name="username" class="form-control" placeholder="用户名 4-8位字母数字下划线" aria-describedby="sizing-addon2">
+          </div>                 
+        </div>       
+        <div class="form-group">
+          <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+            <input type="password" name="password" class="form-control" placeholder="设置密码 6-18个字符" aria-describedby="sizing-addon2">            
           </div>
-          <button type="submit" href="create_account.html" title="Register" class="btn-reg-popup">创建账号</button>          
-        </div>
+        </div>  
+        <div class="form-group">
+          <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+            <input type="password" name="repassword" class="form-control" placeholder="确认密码" aria-describedby="sizing-addon2">            
+          </div>
+        </div>  
+        <div class="form-group">
+          <div class="input-group">
+            <span id="n2" style="color:red"></span><br/>
+            <button type="submit" href="create_account.html" title="Register" class="btn-reg-popup">创建账号</button>
+          </div>
+        </div>             
       </form>       
       <!-- </div>  -->
      </div>
-    <script>
-          $('.go1').click(function(){            
-            $('div #login').css('display','none');
-            $(' #back').css('display','block');
-            $('div #reg2').css('display','none');
-            $('div #reg1').css('display','block');
-          });
-          $('.go2').click(function(){            
-            $('div #login').css('display','none');
-            $('div #back').css('display','block');
-            $('div #reg1').css('display','none');
-            $('div #reg2').css('display','block');
-          });
-          $('#back').click(function(){
-            $('#back').css('display','none');
-            $('div #login').css('display','block');
-            $('div #reg1').css('display','none');
-            $('div #reg2').css('display','none');
-          });          
-      </script>
+    
     <div class="clear"></div> 
    </div> 
   </div> 
-  <a id="etrostore-totop" href="#"></a> 
-  <div id="subscribe_popup" class="subscribe-popup" style="background: url(/static/home/images/icons/bg_newsletter.jpg)"> 
-   <div class="subscribe-popup-container"> 
-    <h2>Join our newsletter</h2> 
-    <div class="description">
-     Subscribe now to get 40% of on any product!
-    </div> 
-    <div class="subscribe-form"> 
-     <form id="mc4wp-form-2" class="mc4wp-form mc4wp-form-275" method="post" data-id="275" data-name=""> 
-      <div class="mc4wp-form-fields"> 
-       <div class="newsletter-content"> 
-        <input type="email" class="newsletter-email" name="EMAIL" placeholder="Your email" required="" /> 
-        <input class="newsletter-submit" type="submit" value="Subscribe" /> 
-       </div> 
-      </div> 
-      <div class="mc4wp-response"></div> 
-     </form> 
-    </div> 
-    <div class="subscribe-checkbox"> 
-     <label for="popup_check"> <input id="popup_check" name="popup_check" type="checkbox" /> <span>Don't show this popup again!</span> </label> 
-    </div> 
-    <div class="subscribe-social"> 
-     <div class="subscribe-social-inner"> 
-      <a href="#" class="social-fb"> <span class="fa fa-facebook"></span> </a> 
-      <a href="#" class="social-tw"> <span class="fa fa-twitter"></span> </a> 
-      <a href="#" class="social-gplus"> <span class="fa fa-google-plus"></span> </a> 
-      <a href="#" class="social-pin"> <span class="fa fa-instagram"></span> </a> 
-      <a href="#" class="social-linkedin"> <span class="fa fa-pinterest-p"></span> </a> 
-     </div> 
-    </div> 
-   </div> 
   </div> 
-  
+  <!-- 表单验证 -->
+  <script type="text/javascript" src="/static/home/js/form.js"></script>   
 
   <script type="text/javascript" src="/static/home/js/jquery/jquery.min.js"></script> 
   <script type="text/javascript" src="/static/home/js/jquery/jquery-migrate.min.js"></script> 
   <script type="text/javascript" src="/static/home/js/bootstrap.min.js"></script> 
   <script type="text/javascript" src="/static/home/js/jquery/js.cookie.min.js"></script> 
-  <!-- OPEN LIBS /static/home/js --> 
+  <!-- OPEN LIBS js --> 
   <script type="text/javascript" src="/static/home/js/owl-carousel/owl.carousel.min.js"></script> 
   <script type="text/javascript" src="/static/home/js/slick-1.6.0/slick.min.js"></script> 
+  <script type="text/javascript">
+    /* <![CDATA[ */
+      var woocommerce_price_slider_params = {"currency_symbol":"$","currency_pos":"left","min_price":"100","max_price":"500"};
+    /* ]]> */
+  </script>
+
   <script type="text/javascript" src="/static/home/js/yith-woocommerce-compare/jquery.colorbox-min.js"></script> 
   <script type="text/javascript" src="/static/home/js/sw_core/isotope.js"></script> 
   <script type="text/javascript" src="/static/home/js/sw_core/jquery.fancybox.pack.js"></script> 

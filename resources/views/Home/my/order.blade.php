@@ -40,53 +40,104 @@
           <div class="woocommerce"> 
            <nav class="woocommerce-MyAccount-navigation"> 
             <ul> 
-             <li class="is-active"> <a href="/">我的订单</a></li> 
+             <li class="is-active"> <a href="/myaccount">我的订单</a></li> 
              <li> <a href="/mycart">我的购物车</a></li> 
-             <li> <a href="/mywish">我的收藏</a> </li> 
-             <li> <a href="">账户信息</a> </li> 
-             <li> <a href="">我的优惠信息</a> </li> 
+             <li> <a href="/mywish">我的收藏夹</a> </li> 
+             <li id="set"> <a href="javascript:void(0)">设置</a> </li> 
+             <li style="display:none"> <a href="/myaccount/{{$uid}}/edit">个人资料</a> </li> 
+             <li style="display:none"> <a href="/myaddress">收货地址</a> </li>
+             <li style="display:none"> <a href="">账户安全</a> </li> 
             </ul> 
-           </nav> 
+           </nav>
+           <script>
+              $('#set').click(function(){
+                $(this).nextAll('li').toggle();
+              });
+           </script>  
            <div class="woocommerce-MyAccount-content">                 
             <div class="u-column1 col-1 woocommerce-Address addresses">
-                <header class="woocommerce-Address-title title">
-                  <h3>物流信息：</h3>中通快递
-                </header>
-                <header class="woocommerce-Address-title title">
-                  <h3>收货地址：</h3>                
-                </header> 
-                <header class="woocommerce-Address-title title">
-                  <h3>订单状态：</h3>已收货                
-                </header> 
-                <header class="woocommerce-Address-title title">
-                  <h3>订单信息</h3>                
-                </header>  
-            </div>           
+              <table class="table">
+                <tr>
+                  <td class="col-md-12"><h4>物流信息：中通快递</h4></td>
+                <tr>
+                  <td class="col-md-12">
+                    <h4>收货地址：
+                     {{$info['address']->name}}&nbsp;{{$info['address']->phone}}<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{$info['address']->adds}}</h4>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="col-md-12"><h4>订单状态：
+                      @if($info['status']==0)
+                      <span style="color:red">待付款</span>
+                      @elseif($info['status']==1)
+                      <span style="color:orange">待发货</span>
+                      @elseif($info['status']==2)
+                      <span style="color:blue">待收货</span>
+                      @elseif($info['status']==3)
+                      <span style="color:yellow">待评价</span>
+                      @else
+                      <span style="color:green">订单完成<span>
+                      @endif                
+                  </h4></td>
+                </tr>
+                <tr>
+                  <td class="col-md-12"><h4>订单信息：</h4></td>
+                </tr>                
+              </table>
+               
+            </div>          
             
             <table class="table table-bordered">
               <tr class="active">
-                <th><span class="col-xs-4">商品名</span><span class="col-xs-5">商品单价</span class=""><span>数量</span></th>                
+                <th class="col-md-10">
+                  <span class="col-md-offset-3">商品</span>
+                  <span class="col-md-offset-5">单价</span>
+                  <span class="col-md-offset-2">数量</span>
+                </th>                
                 <th>付款总额</th>                                                       
               </tr>
               <tr>
                 <td>
                   <table class="table">
+                    @foreach($info['goods'] as $v)
                     <tr>
-                      <td>商品名</td>
-                      <td>单价</td>
-                      <td>数量</td>  
+                      <td><img src="/uploads/goods/{{$v['gpic']}}" width="40px" alt=""></td>
+                      <td>{{$v['gname']}}</td>
+                      <td>{{$v['gprice']}}</td>
+                      <td>{{$v['num']}}</td>
                     </tr>
-                    <tr>
-                      <td>商品名</td>
-                      <td>单价</td>
-                      <td>数量</td>  
-                    </tr>
+                    @endforeach                    
                   </table>
                 </td>                
-                <td rowspan="2">付款总额</td>                
-              </tr> 
-                                    
-            </table> 
+                <td rowspan="2">￥{{$info['total']}}</td>                
+              </tr>                                     
+            </table>
+            <div style="float:right">
+              <a href="/myaccount" class="btn btn-default">返回</a>
+              @if($info['status'] == 0)
+              <button onclick="cancel({{$info['id']}})" class="btn btn-warning">取消订单</button>
+              <a href="/pay?oid={{$info['id']}}" class="btn btn-danger">去付款</a>
+              @elseif($info['status'] == 1) 
+              <a href="/myaccount" class="btn btn-warning">提醒发货</a>
+              @elseif($info['status'] == 2) 
+              <a href="/myaccount" class="btn btn-default">查看物流</a>
+              <a href="/confirm/{{$info['id']}}" class="btn btn-warning">确认收货</a>
+              @elseif($info['status'] == 3) 
+              <a href="/myaccount" class="btn btn-warning">去评价</a>
+              @endif
+            </div>
+
+            <script>
+                function cancel(oid){
+                  if(confirm('您确定要取消订单？')){
+                    $.get("/shop/"+oid+"/edit",function(data){
+                      if(data==0){
+                        location.href = "http://www.project.com/myaccount";
+                      }
+                    });
+                  }
+                }
+            </script>
            </div> 
           </div> 
          </div> 
